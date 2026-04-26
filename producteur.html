@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>L'Art de Produire — Denys Gostishchev</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --noir: #080808;
+    --blanc: #f5f2ec;
+    --or: #c9a84c;
+    --or-pale: #e8d5a3;
+    --gris: #2a2a2a;
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--noir);
+    color: var(--blanc);
+    font-family: 'Space Mono', monospace;
+    overflow-x: hidden;
+  }
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 3rem;
+    background: linear-gradient(to bottom, rgba(8,8,8,0.95), transparent);
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--or);
+  }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a {
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--blanc);
+    text-decoration: none;
+    opacity: 0.6;
+    transition: opacity 0.3s;
+  }
+  .nav-links a:hover { opacity: 1; color: var(--or); }
+
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 3rem 6rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 60% 80% at 70% 30%, rgba(139,26,26,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 60% at 20% 80%, rgba(201,168,76,0.06) 0%, transparent 50%),
+      #080808;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    left: 3rem; top: 0; bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, var(--or) 30%, var(--or) 70%, transparent);
+    opacity: 0.2;
+  }
+  .hero-eyebrow {
+    position: relative;
+    font-size: 0.65rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--or);
+    margin-bottom: 2rem;
+    margin-left: 1.5rem;
+    animation: fadeUp 0.8s ease 0.2s both;
+  }
+  .hero-title {
+    position: relative;
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(4rem, 10vw, 8.5rem);
+    font-weight: 900;
+    line-height: 0.92;
+    margin-left: 1.5rem;
+    margin-bottom: 3rem;
+    animation: fadeUp 0.8s ease 0.4s both;
+  }
+  .hero-title em { font-style: italic; color: var(--or); display: block; }
+  .hero-title span.small {
+    font-size: 0.45em;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    color: rgba(245,242,236,0.4);
+    display: block;
+    margin-top: 0.5rem;
+  }
+  .hero-meta {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+    margin-left: 1.5rem;
+    animation: fadeUp 0.8s ease 0.6s both;
+  }
+  .hero-scroll {
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(245,242,236,0.35);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .hero-scroll::before {
+    content: '';
+    display: block;
+    width: 40px; height: 1px;
+    background: var(--or);
+    opacity: 0.4;
+  }
+  .hero-number {
+    position: absolute;
+    right: 3rem; bottom: 0;
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(6rem, 15vw, 14rem);
+    font-weight: 900;
+    color: rgba(201,168,76,0.04);
+    line-height: 1;
+    user-select: none;
+  }
+
+  section { padding: 7rem 3rem; position: relative; }
+  .section-label {
+    font-size: 0.6rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--or);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1; max-width: 60px; height: 1px;
+    background: var(--or); opacity: 0.4;
+  }
+
+  .intro {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 6rem;
+    align-items: center;
+    border-top: 1px solid rgba(201,168,76,0.12);
+  }
+  .intro-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 7rem; font-weight: 900;
+    color: rgba(201,168,76,0.08);
+    line-height: 1; margin-bottom: -1rem;
+  }
+  .intro-heading {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    font-weight: 700; line-height: 1.1; margin-bottom: 2rem;
+  }
+  .intro-heading em { font-style: italic; color: var(--or); }
+  .intro-body {
+    font-size: 0.85rem; line-height: 2;
+    color: rgba(245,242,236,0.6); letter-spacing: 0.02em;
+  }
+
+  .qualites { border-top: 1px solid rgba(201,168,76,0.12); }
+  .qualites-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 900; margin-bottom: 5rem; line-height: 1;
+  }
+  .qualites-title em { font-style: italic; color: var(--or); }
+  .qualites-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+  }
+  .qualite-item {
+    padding: 2.5rem;
+    border-right: 1px solid rgba(201,168,76,0.1);
+    border-bottom: 1px solid rgba(201,168,76,0.1);
+    transition: background 0.4s;
+  }
+  .qualite-item:hover { background: rgba(201,168,76,0.03); }
+  .qualite-item:nth-child(3n) { border-right: none; }
+  .qualite-item:nth-last-child(-n+3) { border-bottom: none; }
+  .qualite-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.7rem; color: var(--or);
+    letter-spacing: 0.2em; margin-bottom: 1.5rem; opacity: 0.6;
+  }
+  .qualite-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem; font-weight: 700;
+    margin-bottom: 1rem; line-height: 1.2;
+  }
+  .qualite-desc {
+    font-size: 0.7rem; line-height: 1.9;
+    color: rgba(245,242,236,0.45); letter-spacing: 0.02em;
+  }
+
+  .contacter { border-top: 1px solid rgba(201,168,76,0.12); }
+  .contacter-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem; align-items: start;
+  }
+  .contacter-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-weight: 900; line-height: 1.05; margin-bottom: 2rem;
+  }
+  .contacter-title em { font-style: italic; color: var(--or); }
+  .contacter-body {
+    font-size: 0.75rem; line-height: 2;
+    color: rgba(245,242,236,0.5); margin-bottom: 3rem;
+  }
+  .methodes { display: flex; flex-direction: column; gap: 0; }
+  .methode {
+    display: flex; align-items: flex-start;
+    gap: 1.5rem; padding: 2rem 0;
+    border-bottom: 1px solid rgba(201,168,76,0.08);
+  }
+  .methode:first-child { border-top: 1px solid rgba(201,168,76,0.08); }
+  .methode-icon {
+    width: 36px; height: 36px;
+    border: 1px solid rgba(201,168,76,0.3);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; font-size: 0.7rem;
+    color: var(--or); font-family: 'Playfair Display', serif;
+  }
+  .methode-content h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem; font-weight: 700; margin-bottom: 0.3rem;
+  }
+  .methode-content p {
+    font-size: 0.68rem; color: rgba(245,242,236,0.4);
+    line-height: 1.7; letter-spacing: 0.02em;
+  }
+  .form-label-top {
+    font-size: 0.6rem; letter-spacing: 0.3em;
+    text-transform: uppercase; color: var(--or);
+    margin-bottom: 2rem; display: block; opacity: 0.7;
+  }
+  .form-group { margin-bottom: 1.5rem; }
+  .form-group label {
+    display: block; font-size: 0.6rem;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: rgba(245,242,236,0.4); margin-bottom: 0.6rem;
+  }
+  .form-group input, .form-group textarea {
+    width: 100%; background: transparent; border: none;
+    border-bottom: 1px solid rgba(201,168,76,0.2);
+    padding: 0.8rem 0;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem; color: var(--blanc);
+    outline: none; transition: border-color 0.3s; resize: none;
+  }
+  .form-group input:focus, .form-group textarea:focus { border-color: var(--or); }
+  .form-group input::placeholder, .form-group textarea::placeholder { color: rgba(245,242,236,0.2); }
+  .btn-submit {
+    margin-top: 2rem;
+    display: inline-flex; align-items: center; gap: 1rem;
+    background: var(--or); color: var(--noir); border: none;
+    padding: 1rem 2.5rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem; letter-spacing: 0.2em;
+    text-transform: uppercase; cursor: pointer; transition: opacity 0.3s;
+  }
+  .btn-submit:hover { opacity: 0.8; }
+  .btn-submit::after { content: '→'; font-size: 1rem; }
+
+  .about {
+    border-top: 1px solid rgba(201,168,76,0.12);
+    background: rgba(201,168,76,0.02);
+  }
+  .about-inner {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 6rem; align-items: center;
+  }
+  .about-initials {
+    width: 120px; height: 120px;
+    border: 1px solid rgba(201,168,76,0.3);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem; font-weight: 900;
+    color: var(--or); margin-bottom: 2.5rem; position: relative;
+  }
+  .about-initials::before {
+    content: '';
+    position: absolute;
+    top: 6px; left: 6px; right: -6px; bottom: -6px;
+    border: 1px solid rgba(201,168,76,0.1);
+  }
+  .about-name {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 900; line-height: 1.05; margin-bottom: 0.5rem;
+  }
+  .about-title-role {
+    font-size: 0.65rem; letter-spacing: 0.25em;
+    text-transform: uppercase; color: var(--or);
+    margin-bottom: 2rem; opacity: 0.7;
+  }
+  .about-bio {
+    font-size: 0.78rem; line-height: 2;
+    color: rgba(245,242,236,0.55);
+  }
+  .about-stats {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 1px; background: rgba(201,168,76,0.1);
+  }
+  .about-stat { background: var(--noir); padding: 2rem; }
+  .about-stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem; font-weight: 900;
+    color: var(--or); line-height: 1; margin-bottom: 0.4rem;
+  }
+  .about-stat-label {
+    font-size: 0.6rem; letter-spacing: 0.15em;
+    text-transform: uppercase; color: rgba(245,242,236,0.35);
+  }
+
+  footer {
+    border-top: 1px solid rgba(201,168,76,0.12);
+    padding: 2rem 3rem;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .footer-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.8rem; letter-spacing: 0.3em;
+    text-transform: uppercase; color: var(--or); opacity: 0.5;
+  }
+  .footer-copy { font-size: 0.6rem; letter-spacing: 0.1em; color: rgba(245,242,236,0.2); }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">L'Art de Produire</div>
+  <ul class="nav-links">
+    <li><a href="#intro">Introduction</a></li>
+    <li><a href="#qualites">Qualités</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="#about">À propos</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-eyebrow">Guide — Production musicale</div>
+  <h1 class="hero-title">
+    Comment être<br>
+    <em>un bon</em>
+    <span class="small">producteur</span>
+  </h1>
+  <div class="hero-meta">
+    <span class="hero-scroll">Descendre pour explorer</span>
+  </div>
+  <div class="hero-number">01</div>
+</section>
+
+<section class="intro" id="intro">
+  <div>
+    <div class="section-label">Introduction</div>
+    <div class="intro-num">01</div>
+  </div>
+  <div>
+    <h2 class="intro-heading">La production,<br>c'est <em>l'art</em> de<br>donner vie</h2>
+    <p class="intro-body">Un bon producteur ne se limite pas à la technique. Il est architecte du son, psychologue de l'artiste, visionnaire de l'époque. Il traduit une émotion brute en expérience universelle — et c'est précisément ce qui sépare un bon album d'un chef-d'œuvre.</p>
+  </div>
+</section>
+
+<section class="qualites" id="qualites">
+  <div class="section-label">Qualités & compétences</div>
+  <h2 class="qualites-title">Ce qui<br>fait <em>la différence</em></h2>
+  <div class="qualites-grid">
+    <div class="qualite-item">
+      <div class="qualite-num">01</div>
+      <div class="qualite-name">Oreille absolue</div>
+      <p class="qualite-desc">Distinguer une fréquence de 2Hz, entendre la saturation avant qu'elle arrive. L'oreille se développe par l'écoute critique et répétée.</p>
+    </div>
+    <div class="qualite-item">
+      <div class="qualite-num">02</div>
+      <div class="qualite-name">Vision artistique</div>
+      <p class="qualite-desc">Savoir où l'on va avant même de poser la première note. Le producteur est le gardien d'une intention sonore.</p>
+    </div>
+    <div class="qualite-item">
+      <div class="qualite-num">03</div>
+      <div class="qualite-name">Maîtrise technique</div>
+      <p class="qualite-desc">DAW, mixage, mastering, théorie musicale. Les outils doivent devenir invisibles — la technique libère la créativité.</p>
+    </div>
+    <div class="qualite-item">
+      <div class="qualite-num">04</div>
+      <div class="qualite-name">Intelligence humaine</div>
+      <p class="qualite-desc">Créer un espace de confiance totale. L'artiste doit oser être vulnérable. Le producteur est aussi thérapeute.</p>
+    </div>
+    <div class="qualite-item">
+      <div class="qualite-num">05</div>
+      <div class="qualite-name">Culture encyclopédique</div>
+      <p class="qualite-desc">Du blues du Mississippi au club berlinois. La richesse de la palette influence la profondeur de la création.</p>
+    </div>
+    <div class="qualite-item">
+      <div class="qualite-num">06</div>
+      <div class="qualite-name">Patience stratégique</div>
+      <p class="qualite-desc">Savoir attendre le bon moment — pour l'accord parfait, pour la prise définitive. La précipitation est l'ennemi.</p>
+    </div>
+  </div>
+</section>
+
+<section class="contacter" id="contact">
+  <div class="contacter-inner">
+    <div>
+      <div class="section-label">Networking</div>
+      <h2 class="contacter-title">Contacter<br><em>les bonnes</em><br>personnes</h2>
+      <p class="contacter-body">Le réseau se construit dans la durée, avec sincérité. Les meilleures connexions naissent d'une admiration authentique, jamais d'un calcul.</p>
+      <div class="methodes">
+        <div class="methode">
+          <div class="methode-icon">I</div>
+          <div class="methode-content">
+            <h4>Instagram & Réseaux</h4>
+            <p>Commenter avec pertinence. Partager ses propres créations. Ne jamais DM à froid sans avoir d'abord existé dans l'écosystème.</p>
+          </div>
+        </div>
+        <div class="methode">
+          <div class="methode-icon">L</div>
+          <div class="methode-content">
+            <h4>Lieux physiques</h4>
+            <p>Studios, concerts, showcases, résidences artistiques. La rencontre en face-à-face reste irremplaçable.</p>
+          </div>
+        </div>
+        <div class="methode">
+          <div class="methode-icon">E</div>
+          <div class="methode-content">
+            <h4>Email professionnel</h4>
+            <p>Court, direct, personnalisé. Montrer qu'on a écouté leur travail. Proposer de la valeur avant de demander.</p>
+          </div>
+        </div>
+        <div class="methode">
+          <div class="methode-icon">C</div>
+          <div class="methode-content">
+            <h4>Collaborations</h4>
+            <p>Proposer de travailler sur un projet qui vous inspire. La meilleure carte de visite reste ce qu'on crée ensemble.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <span class="form-label-top">Entrer en contact</span>
+      <div class="form-group">
+        <label>Nom</label>
+        <input type="text" placeholder="Votre nom complet">
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" placeholder="votre@email.com">
+      </div>
+      <div class="form-group">
+        <label>Message</label>
+        <textarea rows="5" placeholder="Parlez-moi de votre projet..."></textarea>
+      </div>
+      <button class="btn-submit">Envoyer</button>
+    </div>
+  </div>
+</section>
+
+<section class="about" id="about">
+  <div class="about-inner">
+    <div>
+      <div class="section-label">À propos</div>
+      <div class="about-initials">DG</div>
+      <h2 class="about-name">Denys<br>Gostishchev</h2>
+      <div class="about-title-role">Producteur — Curateur — Explorateur sonore</div>
+      <p class="about-bio">Entre Paris et l'Europe de l'Est, entre la cinémathèque et le studio, Denys développe une sensibilité artistique qui traverse les frontières — musicales, visuelles, culturelles. Sa démarche croise la rigueur de l'École du Louvre avec l'instinct du dancefloor.</p>
+    </div>
+    <div class="about-stats">
+      <div class="about-stat">
+        <div class="about-stat-num">∞</div>
+        <div class="about-stat-label">Écoutes critiques</div>
+      </div>
+      <div class="about-stat">
+        <div class="about-stat-num">3</div>
+        <div class="about-stat-label">Langues maîtrisées</div>
+      </div>
+      <div class="about-stat">
+        <div class="about-stat-num">01</div>
+        <div class="about-stat-label">Vision singulière</div>
+      </div>
+      <div class="about-stat">
+        <div class="about-stat-num">∞</div>
+        <div class="about-stat-label">Projets à venir</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">L'Art de Produire</div>
+  <div class="footer-copy">© 2026 Denys Gostishchev — Tous droits réservés</div>
+</footer>
+
+</body>
+</html>
